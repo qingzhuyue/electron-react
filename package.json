@@ -1,15 +1,22 @@
 {
   "name": "vite-electron-react",
   "private": true,
-  "version": "0.0.0",
-  "main": "electron/main.js",
+  "version": "0.0.1",
+  "main": "dist-electron/index.js",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "rimraf dist-electron && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "electron":"wait-on tcp:5173 && cross-env NODE_ENV=development electron .",
-    "start":"concurrently -k \"npm run dev\" \"npm run electron\""
+    "electron": "wait-on tcp:5173 && cross-env NODE_ENV=development electron .",
+    "start": "concurrently -k \"npm run dev\" \"npm run electron\"",
+    "electron:build": "npm run build && electron-builder"
+  },
+  "build": {
+    "appId": "ink.bennent_g.demo",
+    "directories": {
+      "output": "release"
+    }
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -23,12 +30,17 @@
     "@vitejs/plugin-react": "^4.2.1",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
-    "electron": "^28.2.0",
+    "electron": "^25.3.2",
+    "electron-builder": "^24.6.3",
+    "electron-devtools-installer": "^3.2.0",
     "eslint": "^8.55.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "rimraf": "^5.0.5",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
+    "vite-plugin-electron": "^0.15.6",
+    "vite-plugin-electron-renderer": "^0.14.5",
     "wait-on": "^7.2.0"
   }
 }
