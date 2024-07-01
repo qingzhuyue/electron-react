@@ -13,9 +13,22 @@
     "electron:build": "npm run build && electron-builder"
   },
   "build": {
-    "appId": "ink.bennent_g.demo",
+    "appId": "ink.bennent_g.qingzhuyue",
     "directories": {
       "output": "release"
+    },
+    "productName": "青竹悦",
+    "files": [],
+    "nsis": {
+      "oneClick": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "./public/vite.svg",
+      "uninstallerIcon": "./public/vite.svg",
+      "installerHeaderIcon": "./public/vite.svg",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "青竹悦"
     }
   },
   "dependencies": {
