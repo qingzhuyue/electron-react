@@ -2,14 +2,14 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-01-30 17:21:36
+ * @LastEditTime: 2024-07-01 22:01:07
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
  */
 import {app, BrowserWindow, ipcMain, WebContents, Certificate, dialog, IpcRendererEvent} from "electron"
 import path, {join} from "path";
-import {readFile} from "./readFile.ts"
+import { autoUpdater } from 'electron-updater';
 
 let mainWindow: BrowserWindow;
 
@@ -43,11 +43,11 @@ const createWindow = () => {
 }
 
 // 监听应用程序
-// app.whenReady().then(() => {
-//     console.log('whenReady事件')
-//     createWindow(); // 创建窗口
-//
-// })
+app.whenReady().then(() => {
+    console.log('whenReady事件')
+    createWindow(); // 创建窗口
+
+})
 // 应用程序完成基础的启动的时候被触发
 app.on('will-finish-launching', () => {
     console.log("应用程序完成基础的启动的时候被触发")
@@ -69,9 +69,7 @@ app.on("ready", (event) => {
         });
         if (file.filePaths && file.filePaths.length > 0) {
             mainWindow.webContents.send("filePath", file.filePaths[0]);
-            readFile(file.filePaths[0], (data) => {
-                mainWindow.webContents.send("fileContent", data);
-            })
+           
 
             console.log("file.filePaths[0]", file.filePaths[0])
         }
