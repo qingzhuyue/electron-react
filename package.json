@@ -1,11 +1,11 @@
 {
   "name": "vite-electron-react",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "dist-electron/index.js",
   "scripts": {
     "dev": "vite",
-    "build": "dist-electron && vite build",
+    "build": "rimraf dist-electron && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "electron": "wait-on tcp:5173 && cross-env NODE_ENV=development electron .",
@@ -19,11 +19,7 @@
       "output": "release"
     },
     "productName": "青竹悦",
-    "files": [
-      "dist",
-      "node_modules",
-      "package.json"
-    ],
+    "files": [],
     "publish": {
       "provider": "generic",
       "url": "http://8.130.44.166/"

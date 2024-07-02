@@ -2,13 +2,13 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-01 22:01:07
+ * @LastEditTime: 2024-07-02 09:28:47
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
  */
-import {app, BrowserWindow, ipcMain, WebContents, Certificate, dialog, IpcRendererEvent} from "electron"
-import path, {join} from "path";
+import { app, BrowserWindow, ipcMain, WebContents, Certificate, dialog, IpcRendererEvent } from "electron"
+import path, { join } from "path";
 import { autoUpdater } from 'electron-updater';
 
 let mainWindow: BrowserWindow;
@@ -39,14 +39,68 @@ const createWindow = () => {
     } else {
         mainWindow.loadFile(path.join(__dirname, './index.html'))
     }
-    // mainWindow.maximize()
 }
+const sendStatusToWindow = (params: any) => {
+    mainWindow.webContents.send('message', params);
+};
+// 下载
+const downloadVersion = (data: any) => {
+    mainWindow.webContents.send('downloadVersion', data);
+  };
+// 更新操作
+const updateHandle = () => {
+    let message = {
+        error: '检查更新出错',
+        checking: '正在检查更新...',
+        updateAva: '检测到新版本，准备下载...',
+        updateNotAva: '已经是最新版本，不必要更新',
+    };
+    autoUpdater.checkForUpdates();
+    const feelUrl = 'http://8.130.44.166/electron_files';
+    autoUpdater.setFeedURL(feelUrl); // 设置上传的服务器地址
+
+    autoUpdater.on('error', function (err: any) {
+          sendStatusToWindow({ isUpdate: false, message: err });
+    });
+    // 在检查更新是否开始发出
+    autoUpdater.on('checking-for-update', function () {
+          sendStatusToWindow({ isUpdate: false, message: message.checking });
+    });
+    // 有可更新触发
+    autoUpdater.on('update-available', function (info: any) {
+        sendStatusToWindow({ isUpdate: true, message: message.updateAva });
+    });
+    // 没有检测到可更新的版本
+    autoUpdater.on('update-not-available', function (info: any) {
+        sendStatusToWindow({ isUpdate: false, message: message.updateNotAva });
+    });
+    autoUpdater.on('download-progress', function (progressObj: any) {
+        let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
+        log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+        log_message =
+            log_message +
+            ' (' +
+            progressObj.transferred +
+            '/' +
+            progressObj.total +
+            ')';
+        downloadVersion({
+            download: true,
+            ...progressObj,
+        });
+    });
+    autoUpdater.on('update-downloaded', function () {
+        sendStatusToWindow({ isUpdate: true, message: message.updateNotAva });
+        autoUpdater.quitAndInstall();
+    });
+};
 
 // 监听应用程序
 app.whenReady().then(() => {
     console.log('whenReady事件')
+    autoUpdater.checkForUpdatesAndNotify();
+    updateHandle();
     createWindow(); // 创建窗口
-
 })
 // 应用程序完成基础的启动的时候被触发
 app.on('will-finish-launching', () => {
@@ -69,7 +123,7 @@ app.on("ready", (event) => {
         });
         if (file.filePaths && file.filePaths.length > 0) {
             mainWindow.webContents.send("filePath", file.filePaths[0]);
-           
+
 
             console.log("file.filePaths[0]", file.filePaths[0])
         }
@@ -84,7 +138,7 @@ app.on("ready", (event) => {
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
-        new BrowserWindow({width: 0, height: 0, show: false});
+        new BrowserWindow({ width: 0, height: 0, show: false });
         // onlineStatusWindow.loadURL('file://' + __dirname + '/online-status.html');
         //
     });

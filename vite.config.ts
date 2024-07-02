@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 15:28:46
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-01-30 17:27:10
+ * @LastEditTime: 2024-07-01 23:41:46
  * @FilePath: /vite-electron-react/vite.config.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
