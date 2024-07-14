@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-14 22:33:10
+ * @LastEditTime: 2024-07-14 22:45:40
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -93,20 +93,18 @@ const updateHandle = () => {
     });
 };
 
-// 监听应用程序
-app.whenReady().then(() => {
-    console.log('whenReady事件')
-    autoUpdater.checkForUpdatesAndNotify();
-    updateHandle();
-    createWindow(); // 创建窗口
-})
 // 应用程序完成基础的启动的时候被触发
 app.on('will-finish-launching', () => {
     console.log("应用程序完成基础的启动的时候被触发")
 })
 app.on("ready", (event) => {
     console.log("ready");
+    autoUpdater.checkForUpdatesAndNotify();
+    updateHandle();
     createWindow(); // 创建窗口
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) createWindow()
+      })
     ipcMain.handle('selectDate', (envet: any, date: any) => {
         console.log("渲染进程发送的日期", date)
         mainWindow.webContents.send("returnInfo", date)
@@ -132,14 +130,6 @@ app.on("ready", (event) => {
             title: "保存文件"
         })
     })
-    //  主进程向渲染进程发送版本信息
-
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow();
-        new BrowserWindow({ width: 0, height: 0, show: false });
-        // onlineStatusWindow.loadURL('file://' + __dirname + '/online-status.html');
-        //
-    });
 })
 
 

@@ -11,7 +11,8 @@
     "electron": "wait-on tcp:5173 && cross-env NODE_ENV=development electron .",
     "start": "concurrently -k \"npm run dev\" \"npm run electron\"",
     "electron:build": "npm run build && electron-builder",
-    "postinstall":"electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "publish": "electron-forge publish"
   },
   "build": {
     "appId": "ink.bennent_g.qingzhuyue",
@@ -34,6 +35,10 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "青竹悦"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "./public/vite.svg"
     }
   },
   "dependencies": {
@@ -42,6 +47,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@electron-forge/publisher-github": "^7.4.0",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
