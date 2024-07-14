@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-02 09:28:47
+ * @LastEditTime: 2024-07-14 22:33:10
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -31,8 +31,6 @@ const createWindow = () => {
         }
     });
 
-    // 加载vue url视本地环境而定，如http://localhost:5173
-    // win.loadURL('http://localhost:3000')
     if (process.env.NODE_ENV === 'development') {
         mainWindow.loadURL('http://localhost:5173')
         mainWindow.webContents.openDevTools()
