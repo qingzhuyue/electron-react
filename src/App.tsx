@@ -2,43 +2,72 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 15:28:46
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-01 23:49:54
+ * @LastEditTime: 2024-07-15 22:57:06
  * @FilePath: /vite-electron-react/src/App.tsx
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
  */
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+const OPENROUTER_API_KEY = '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';
+const YOUR_SITE_URL ="";
+const YOUR_SITE_NAME = ""
+
 function App() {
   const [count, setCount] = useState(0);
-  const [text,setText] = useState("000");
-  const [info,setInfo] = useState("")
-console.log("接收主进程信息",window.electron.ipcRenderer)
-const { isDownload, newWindow } = window.electron.ipcRenderer;
-useEffect(() => {
-  window.electron.ipcRenderer.updateMessage(function (text: any, info: any) {
-    if (text.isUpdate) {
-      setText('已经发现新版本')
-      console.log('已经发现新版本，确定要更新吗?')
-      isDownload();
-     
-    } else {
-      
-    }
-  });
-  window.electron.ipcRenderer.downloadVersion(function (
-    data: any,
-    info: any
-  ) {
-    if (data.download) {
-      setInfo(data)
-      console.log("下载信息",data)
-    }
-  });
-}, []);
+  const [text, setText] = useState("000");
+  const [info, setInfo] = useState("")
+  console.log("接收主进程信息", window.electron.ipcRenderer)
+  const { isDownload, newWindow } = window.electron.ipcRenderer;
+  useEffect(() => {
+    window.electron.ipcRenderer.updateMessage(function (text: any, info: any) {
+      if (text.isUpdate) {
+        setText('已经发现新版本')
+        console.log('已经发现新版本，确定要更新吗?')
+        isDownload();
+
+      } else {
+
+      }
+    });
+    window.electron.ipcRenderer.downloadVersion(function (
+      data: any,
+      info: any
+    ) {
+      if (data.download) {
+        setInfo(data)
+        console.log("下载信息", data)
+      }
+    });
+    fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+        "HTTP-Referer": `${YOUR_SITE_URL}`, // Optional, for including your app on openrouter.ai rankings.
+        "X-Title": `${YOUR_SITE_NAME}`, // Optional. Shows in rankings on openrouter.ai.
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "model": "microsoft/phi-3-mini-128k-instruct:free",
+        "messages": [
+          { "role": "user", "content": "你好呀" },
+        ],
+        "provider": {
+          "order": [
+            "Azure",
+            "Together"
+          ]
+        },
+      })
+    }).then(res=>res.json()).then(res => {
+      console.log(console.log("结果", res))
+    }).catch(err => {
+      console.log("异常：", err)
+    });
+  }, []);
   return (
     <>
       <div>

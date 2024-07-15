@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-14 22:45:40
+ * @LastEditTime: 2024-07-15 22:25:11
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -177,7 +177,7 @@ app.on("browser-window-created", () => {
 })
 
 app.on('web-contents-created', () => {
-    console.log("web-contents-created")
+    console.log("创建渲染进程")
 })
 
 // 证书相关的事件
