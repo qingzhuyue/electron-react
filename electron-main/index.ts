@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-15 22:25:11
+ * @LastEditTime: 2024-07-17 22:10:18
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -58,21 +58,26 @@ const updateHandle = () => {
     autoUpdater.setFeedURL(feelUrl); // 设置上传的服务器地址
 
     autoUpdater.on('error', function (err: any) {
+        console.log("更新检测error")
           sendStatusToWindow({ isUpdate: false, message: err });
     });
     // 在检查更新是否开始发出
     autoUpdater.on('checking-for-update', function () {
           sendStatusToWindow({ isUpdate: false, message: message.checking });
+          console.log("更新检测")
     });
     // 有可更新触发
     autoUpdater.on('update-available', function (info: any) {
         sendStatusToWindow({ isUpdate: true, message: message.updateAva });
+        console.log("更新检测2")
     });
     // 没有检测到可更新的版本
     autoUpdater.on('update-not-available', function (info: any) {
         sendStatusToWindow({ isUpdate: false, message: message.updateNotAva });
+        console.log("更新检测3")
     });
     autoUpdater.on('download-progress', function (progressObj: any) {
+        console.log("更新检测4")
         let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
         log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
         log_message =
@@ -88,9 +93,12 @@ const updateHandle = () => {
         });
     });
     autoUpdater.on('update-downloaded', function () {
+        console.log("更新检测5")
         sendStatusToWindow({ isUpdate: true, message: message.updateNotAva });
         autoUpdater.quitAndInstall();
     });
+
+    
 };
 
 // 应用程序完成基础的启动的时候被触发

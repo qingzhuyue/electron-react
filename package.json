@@ -36,6 +36,9 @@
       "createStartMenuShortcut": true,
       "shortcutName": "青竹悦"
     },
+    "mac": {
+      "icon": "./icon.iconset"
+    },
     "win": {
       "target": "nsis",
       "icon": "./public/vite.svg"
