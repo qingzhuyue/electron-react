@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-17 22:10:18
+ * @LastEditTime: 2024-07-17 23:35:10
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -110,9 +110,9 @@ app.on("ready", (event) => {
     autoUpdater.checkForUpdatesAndNotify();
     updateHandle();
     createWindow(); // 创建窗口
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow()
-      })
+    // app.on('activate', () => {
+    //     if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    //   })
     ipcMain.handle('selectDate', (envet: any, date: any) => {
         console.log("渲染进程发送的日期", date)
         mainWindow.webContents.send("returnInfo", date)
@@ -144,7 +144,8 @@ app.on("ready", (event) => {
 // 当所有的窗口都被关闭时触发
 app.on('window-all-closed', () => {
     console.log("当所有的窗口都被关闭时触发");
-    if (process.platform !== 'darwin') app.quit()
+    app.quit()
+    // if (process.platform !== 'darwin') app.quit()
 })
 
 app.on('before-quit', () => {
