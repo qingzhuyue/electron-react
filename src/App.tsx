@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 15:28:46
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-21 23:17:38
+ * @LastEditTime: 2024-07-22 00:25:11
  * @FilePath: /vite-electron-react/src/App.tsx
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -17,11 +17,13 @@ const YOUR_SITE_URL = "";
 const YOUR_SITE_NAME = ""
 
 function App() {
+  const [text, setText]: any = useState(null)
   console.log("接收主进程信息", window.electronAPI)
   const { send, receive } = window.electronAPI;
   useEffect(() => {
     receive("fromMain", (data: string) => {
       console.log("主线程传过来的参数", data)
+      setText(data)
     })
     // fetch("https://openrouter.ai/api/v1/chat/completions", {
     //   method: "POST",
@@ -51,7 +53,7 @@ function App() {
   }, []);
 
   const openNewWindow = () => {
-    send("toMain","打开新窗口")
+    send("toMain", "打开新窗口")
   }
   return (
     <>
@@ -68,6 +70,9 @@ function App() {
           打开
         </button>
       </div>
+      {
+        text && <p>主线程传过来的参数{text}</p>
+      }
     </>
   )
 }

@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-21 23:52:10
+ * @LastEditTime: 2024-07-22 00:16:11
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -44,7 +44,7 @@ const sendStatusToWindow = (params: any) => {
 // 下载
 const downloadVersion = (data: any) => {
     mainWindow.webContents.send('downloadVersion', data);
-  };
+};
 // 更新操作
 const updateHandle = () => {
     let message = {
@@ -59,12 +59,12 @@ const updateHandle = () => {
 
     autoUpdater.on('error', function (err: any) {
         console.log("更新检测error")
-          sendStatusToWindow({ isUpdate: false, message: err });
+        sendStatusToWindow({ isUpdate: false, message: err });
     });
     // 在检查更新是否开始发出
     autoUpdater.on('checking-for-update', function () {
-          sendStatusToWindow({ isUpdate: false, message: message.checking });
-          console.log("更新检测")
+        sendStatusToWindow({ isUpdate: false, message: message.checking });
+        console.log("更新检测")
     });
     // 有可更新触发
     autoUpdater.on('update-available', function (info: any) {
@@ -98,7 +98,7 @@ const updateHandle = () => {
         autoUpdater.quitAndInstall();
     });
 
-    
+
 };
 
 // 应用程序完成基础的启动的时候被触发
@@ -110,21 +110,18 @@ app.on("ready", (event) => {
     // autoUpdater.checkForUpdatesAndNotify();
     // updateHandle();
     createWindow(); // 创建窗口
-    // app.on('activate', () => {
-    //     if (BrowserWindow.getAllWindows().length === 0) createWindow()
-    //   })
-    ipcMain.handle('newWindow', (envet: any, date: any) => {
-        console.log("渲染进程发送的日期", date)
-        mainWindow.webContents.send("returnInfo", date)
-    })
 
-    ipcMain.on("toMain",(event,data)=>{
-        console.log("打开新的窗口：",data)
-        createWindow();
+    ipcMain.on("toMain", (event, data) => {
+        console.log("打开新的窗口：", data,event)
+        // mainWindow.webContents.send("fromMain", data)
+        event.reply('fromMain', 'Hello from main process');
+        // createWindow();
     })
 })
 
-
+app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+})
 // 当所有的窗口都被关闭时触发
 app.on('window-all-closed', () => {
     console.log("当所有的窗口都被关闭时触发");
