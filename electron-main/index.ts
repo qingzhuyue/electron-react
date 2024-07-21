@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-17 23:35:10
+ * @LastEditTime: 2024-07-21 23:52:10
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -107,36 +107,20 @@ app.on('will-finish-launching', () => {
 })
 app.on("ready", (event) => {
     console.log("ready");
-    autoUpdater.checkForUpdatesAndNotify();
-    updateHandle();
+    // autoUpdater.checkForUpdatesAndNotify();
+    // updateHandle();
     createWindow(); // 创建窗口
     // app.on('activate', () => {
     //     if (BrowserWindow.getAllWindows().length === 0) createWindow()
     //   })
-    ipcMain.handle('selectDate', (envet: any, date: any) => {
+    ipcMain.handle('newWindow', (envet: any, date: any) => {
         console.log("渲染进程发送的日期", date)
         mainWindow.webContents.send("returnInfo", date)
     })
-    ipcMain.handle('openFile', async (event: IpcRendererEvent) => {
-        const webContents = event.sender;
-        BrowserWindow.fromWebContents(webContents);
-        let file = await dialog.showOpenDialog({
-            title: "选择文件",
-            message: "选择文件",
-            buttonLabel: "按此打开文件",
-        });
-        if (file.filePaths && file.filePaths.length > 0) {
-            mainWindow.webContents.send("filePath", file.filePaths[0]);
 
-
-            console.log("file.filePaths[0]", file.filePaths[0])
-        }
-        mainWindow.webContents.send("versionInfo", app.getVersion());
-    });
-    ipcMain.handle("savaFile", async () => {
-        await dialog.showSaveDialog({
-            title: "保存文件"
-        })
+    ipcMain.on("toMain",(event,data)=>{
+        console.log("打开新的窗口：",data)
+        createWindow();
     })
 })
 
