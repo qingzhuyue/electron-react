@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-22 00:16:11
+ * @LastEditTime: 2024-07-23 00:04:43
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -35,7 +35,8 @@ const createWindow = () => {
         mainWindow.loadURL('http://localhost:5173')
         mainWindow.webContents.openDevTools()
     } else {
-        mainWindow.loadFile(path.join(__dirname, './index.html'))
+        mainWindow.loadFile(path.join(__dirname, './index.html'));
+        mainWindow.webContents.openDevTools()
     }
 }
 const sendStatusToWindow = (params: any) => {
@@ -54,7 +55,7 @@ const updateHandle = () => {
         updateNotAva: '已经是最新版本，不必要更新',
     };
     autoUpdater.checkForUpdates();
-    const feelUrl = 'http://8.130.44.166/electron_files';
+    const feelUrl = 'http://8.130.44.166/electron_files/';
     autoUpdater.setFeedURL(feelUrl); // 设置上传的服务器地址
 
     autoUpdater.on('error', function (err: any) {
@@ -108,13 +109,13 @@ app.on('will-finish-launching', () => {
 app.on("ready", (event) => {
     console.log("ready");
     // autoUpdater.checkForUpdatesAndNotify();
-    // updateHandle();
+    updateHandle();
     createWindow(); // 创建窗口
 
     ipcMain.on("toMain", (event, data) => {
         console.log("打开新的窗口：", data,event)
         // mainWindow.webContents.send("fromMain", data)
-        event.reply('fromMain', 'Hello from main process');
+        event.reply('fromMain', data);
         // createWindow();
     })
 })
@@ -125,8 +126,7 @@ app.on('activate', () => {
 // 当所有的窗口都被关闭时触发
 app.on('window-all-closed', () => {
     console.log("当所有的窗口都被关闭时触发");
-    app.quit()
-    // if (process.platform !== 'darwin') app.quit()
+    if (process.platform !== 'darwin') app.quit()
 })
 
 app.on('before-quit', () => {
