@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-08-08 23:16:34
+ * @LastEditTime: 2024-08-09 01:13:34
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -26,9 +26,10 @@ const createWindow = () => {
         icon: path.join(process.env.PUBLIC, 'vite.svg'),
         webPreferences: {
             preload: path.join(__dirname, './preload.js'),
-            nodeIntegration: true, // 渲染进程使用Node API
+            nodeIntegration: false, // 渲染进程使用Node API
             contextIsolation: true, // 是否隔离上下文
-        }
+            webSecurity: true
+        },
     });
 
     if (process.env.NODE_ENV === 'development') {
@@ -47,7 +48,7 @@ const downloadVersion = (data: any) => {
     mainWindow.webContents.send('downloadVersion', data);
 };
 // 更新操作
-const updateHandle = () => {
+const updateHandle = (callback) => {
     let message = {
         error: '检查更新出错',
         checking: '正在检查更新...',
@@ -55,24 +56,27 @@ const updateHandle = () => {
         updateNotAva: '已经是最新版本，不必要更新',
     };
     autoUpdater.checkForUpdates();
-    const feelUrl = 'http://8.130.44.166/electron_files/';
-
+    const feelUrl = 'http://8.130.44.166/electron_files';
+    
     // ios 系统的更新配置
     if (process.platform === 'darwin') {
+        callback("MAC更新检测")
         autoUpdater.setFeedURL({
             provider: 'generic',
-            url: `${feelUrl}/latest-mac.yml`
+            url: `${feelUrl}/release`
             // 注意：这里使用 .yml 文件来指定 .zip 文件的下载 URL，但你也可以直接设置 .zip 文件的 URL  
         });
     }
 
-    // 设置更新包的服务器地址  
+    // 设置windows更新包的服务器地址  
     if (process.platform === 'win32') {
+        callback("windows更新检测")
         autoUpdater.setFeedURL('https://你的服务器地址/updates/win32/' + process.arch);
     }
 
 
     autoUpdater.on('update-downloaded', (info) => {
+        callback("通知用户下载")
         // 通知用户更新已下载，并重启应用  
         autoUpdater.quitAndInstall();
     });
@@ -81,29 +85,18 @@ const updateHandle = () => {
     autoUpdater.on('download-progress', (progressObj) => {
         let log_message = `下载速度: ${progressObj.bytesPerSecond} - 下载了 ${progressObj.percent}% (${progressObj.transferred}/${progressObj.total})`;
         console.log(log_message);
-        ipcMain.on("toMain", (event, data) => {
-            mainWindow.webContents.send("updateMes", log_message)
-            // event.reply('fromMain', data);
-        })
+        callback(log_message)
     });
     // 监听错误  
     autoUpdater.on('error', (err) => {
         console.log(err);
+        callback(`更新报错：${err}`)
     });
-
     // 检查更新  
     autoUpdater.checkForUpdates();
 };
 
-// 打开新的页签
-const openNewTab = (url) => {
-    let newWin = new BrowserWindow({
-        webPreferences: {
-            nodeIntegration: true
-        }
-    });
-    newWin.loadURL(url);
-}
+
 
 // 应用程序完成基础的启动的时候被触发
 app.on('will-finish-launching', () => {
@@ -112,14 +105,16 @@ app.on('will-finish-launching', () => {
 app.on("ready", (event) => {
     console.log("ready", process.arch);
     // autoUpdater.checkForUpdatesAndNotify();
-    updateHandle();
     createWindow(); // 创建窗口
-
+    updateHandle((mes)=>{
+        ipcMain.on("toUpdateMes",(event,data)=>{
+            mainWindow.webContents.send("updateMes", mes);
+        })
+    });
     ipcMain.on("toMain", (event, data) => {
         console.log("打开新的窗口：", data, event)
-        // mainWindow.webContents.send("fromMain", data)
+        mainWindow.webContents.send("fromMain", data);
         // event.reply('fromMain', data);
-        openNewTab(data);
     })
 })
 

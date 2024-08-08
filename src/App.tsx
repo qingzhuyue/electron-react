@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 15:28:46
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-08-08 23:19:27
+ * @LastEditTime: 2024-08-09 00:41:26
  * @FilePath: /vite-electron-react/src/App.tsx
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -18,9 +18,9 @@ const YOUR_SITE_NAME = ""
 
 function App() {
   const [text, setText]: any = useState(null)
-  console.log("接收主进程信息", window.electronAPI)
   const { send, receive } = window.electronAPI;
   useEffect(() => {
+    send("toUpdateMes","看看是不是有更新的")
     receive("fromMain", (data: string) => {
       console.log("主线程传过来的参数", data)
     })
@@ -74,7 +74,7 @@ function App() {
         </button>
       </div>
       {
-        text && <p>主线程传过来的参数{text}</p>
+        text && <p>主线程传过来的参数：{text}</p>
       }
     </>
   )
