@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 15:28:46
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-01 23:41:46
+ * @LastEditTime: 2024-08-06 22:16:50
  * @FilePath: /vite-electron-react/vite.config.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -13,7 +13,6 @@ import electron from "vite-plugin-electron";
 import electronRenderer from "vite-plugin-electron-renderer";
 import polyfillExports from "vite-plugin-electron-renderer";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   base: './',
   plugins: [

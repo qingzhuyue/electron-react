@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-23 00:04:43
+ * @LastEditTime: 2024-08-08 20:58:57
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -22,7 +22,7 @@ process.env.PUBLIC = app.isPackaged
 
 const createWindow = () => {
     mainWindow = new BrowserWindow({
-        title: '编辑器',
+        title: 'electron 应用',
         icon: path.join(process.env.PUBLIC, 'vite.svg'),
         webPreferences: {
             preload: path.join(__dirname, './preload.js'),
