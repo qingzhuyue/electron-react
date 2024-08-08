@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 15:28:46
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-07-22 00:25:11
+ * @LastEditTime: 2024-08-08 23:19:27
  * @FilePath: /vite-electron-react/src/App.tsx
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -23,6 +23,9 @@ function App() {
   useEffect(() => {
     receive("fromMain", (data: string) => {
       console.log("主线程传过来的参数", data)
+    })
+    receive('updateMes',(data: string) => {
+      console.log("更新信息", data)
       setText(data)
     })
     // fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -53,7 +56,7 @@ function App() {
   }, []);
 
   const openNewWindow = () => {
-    send("toMain", "打开新窗口")
+    send("toMain", "https://weread.qq.com/")
   }
   return (
     <>
