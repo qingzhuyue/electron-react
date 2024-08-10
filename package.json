@@ -1,7 +1,7 @@
 {
   "name": "vite-electron-react",
   "private": true,
-  "version": "0.0.10",
+  "version": "0.0.11",
   "main": "dist-electron/index.js",
   "scripts": {
     "dev": "vite",
@@ -38,7 +38,30 @@
       "shortcutName": "青竹悦"
     },
     "mac": {
-      "icon": "./icon.iconset"
+      "icon": "./icon.iconset",
+      "category": "your.app.category.type",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "identity": "Developer ID Application: Your Name (TeamID123456789)"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
     },
     "win": {
       "target": "nsis",

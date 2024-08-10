@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-08-10 22:50:53
+ * @LastEditTime: 2024-08-10 23:19:14
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -54,13 +54,14 @@ const updateHandle = (callback) => {
         checking: '正在检查更新...',
         updateAva: '检测到新版本，准备下载...',
         updateNotAva: '已经是最新版本，不必要更新',
+        isDown:'通知用户更新已下载，并重启应用'
     };
     autoUpdater.checkForUpdates();
     const feelUrl = 'http://8.130.44.166/electron_files';
     
     // ios 系统的更新配置
     if (process.platform === 'darwin') {
-        callback("MAC更新检测")
+        callback(message.checking)
         autoUpdater.setFeedURL({
             provider: 'generic',
             url: `${feelUrl}/release`
@@ -70,7 +71,7 @@ const updateHandle = (callback) => {
 
     // 设置windows更新包的服务器地址  
     if (process.platform === 'win32') {
-        callback("windows更新检测")
+        callback(message.checking)
         autoUpdater.setFeedURL('https://你的服务器地址/updates/win32/' + process.arch);
     }
     autoUpdater.on('update-available', (info) => {  
@@ -80,7 +81,7 @@ const updateHandle = (callback) => {
       });  
 
     autoUpdater.on('update-downloaded', (info) => {
-        callback("通知用户下载")
+        callback(message.isDown)
         // 通知用户更新已下载，并重启应用  
         autoUpdater.quitAndInstall();
     });
