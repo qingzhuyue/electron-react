@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-08-09 01:13:34
+ * @LastEditTime: 2024-08-10 22:50:53
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -73,7 +73,11 @@ const updateHandle = (callback) => {
         callback("windows更新检测")
         autoUpdater.setFeedURL('https://你的服务器地址/updates/win32/' + process.arch);
     }
-
+    autoUpdater.on('update-available', (info) => {  
+        console.log('Update available: ', info.version);  
+        callback(`更新信息：${info}`)
+        // 可以在这里提示用户更新  
+      });  
 
     autoUpdater.on('update-downloaded', (info) => {
         callback("通知用户下载")
