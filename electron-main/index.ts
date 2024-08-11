@@ -2,12 +2,12 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-08-10 23:19:14
+ * @LastEditTime: 2024-08-11 22:54:42
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
  */
-import { app, BrowserWindow, ipcMain, WebContents, Certificate, dialog, IpcRendererEvent } from "electron"
+import { app, BrowserWindow, ipcMain, WebContents, Certificate, dialog, IpcRendererEvent,contentTracing } from "electron"
 import path, { join } from "path";
 import { autoUpdater } from 'electron-updater';
 
@@ -120,7 +120,19 @@ app.on("ready", (event) => {
         console.log("打开新的窗口：", data, event)
         mainWindow.webContents.send("fromMain", data);
         // event.reply('fromMain', data);
-    })
+    });
+
+    (async () => {
+        await contentTracing.startRecording({
+          included_categories: ['*']
+        })
+        console.log('Tracing started')
+        await new Promise(resolve => setTimeout(resolve, 5000))
+        const path = await contentTracing.stopRecording()
+        console.log('追踪数据记录到： ' + path)
+      })();
+
+      
 })
 
 app.on('activate', () => {
