@@ -1,7 +1,7 @@
 {
   "name": "vite-electron-react",
   "private": true,
-  "version": "0.0.11",
+  "version": "0.0.12",
   "main": "dist-electron/index.js",
   "scripts": {
     "dev": "vite",
@@ -45,8 +45,7 @@
       "target": [
         "dmg",
         "zip"
-      ],
-      "identity": "Developer ID Application: Your Name (TeamID123456789)"
+      ]
     },
     "dmg": {
       "contents": [

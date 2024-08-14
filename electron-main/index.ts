@@ -2,12 +2,12 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-08-11 22:54:42
+ * @LastEditTime: 2024-08-14 22:48:38
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
  */
-import { app, BrowserWindow, ipcMain, WebContents, Certificate, dialog, IpcRendererEvent,contentTracing } from "electron"
+import { app, BrowserWindow, ipcMain, WebContents, Certificate, dialog, IpcRendererEvent,contentTracing ,nativeImage, Tray} from "electron"
 import path, { join } from "path";
 import { autoUpdater } from 'electron-updater';
 
@@ -21,6 +21,7 @@ process.env.PUBLIC = app.isPackaged
 
 
 const createWindow = () => {
+    // const tray = new Tray('../public/bg.png')
     mainWindow = new BrowserWindow({
         title: 'electron 应用',
         icon: path.join(process.env.PUBLIC, 'vite.svg'),
@@ -40,13 +41,8 @@ const createWindow = () => {
         mainWindow.webContents.openDevTools()
     }
 }
-const sendStatusToWindow = (params: any) => {
-    mainWindow.webContents.send('message', params);
-};
-// 下载
-const downloadVersion = (data: any) => {
-    mainWindow.webContents.send('downloadVersion', data);
-};
+
+
 // 更新操作
 const updateHandle = (callback) => {
     let message = {
