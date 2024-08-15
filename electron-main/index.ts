@@ -2,7 +2,7 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 17:21:35
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-08-14 22:48:38
+ * @LastEditTime: 2024-08-14 23:04:38
  * @FilePath: /vite-electron-react/electron-main/index.ts
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
@@ -86,7 +86,11 @@ const updateHandle = (callback) => {
     autoUpdater.on('download-progress', (progressObj) => {
         let log_message = `下载速度: ${progressObj.bytesPerSecond} - 下载了 ${progressObj.percent}% (${progressObj.transferred}/${progressObj.total})`;
         console.log(log_message);
-        callback(log_message)
+        
+
+        setInterval(()=>{
+            callback(log_message);
+        },1000)
     });
     // 监听错误  
     autoUpdater.on('error', (err) => {
