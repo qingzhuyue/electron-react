@@ -2,8 +2,8 @@
  * @Author: qingzhuyue qingzhuyue@foxmail.com
  * @Date: 2024-01-30 15:28:46
  * @LastEditors: qingzhuyue qingzhuyue@foxmail.com
- * @LastEditTime: 2024-08-09 00:41:26
- * @FilePath: /vite-electron-react/src/App.tsx
+ * @LastEditTime: 2024-10-24 19:01:25
+ * @FilePath: /electron-react/src/App.tsx
  * @Description: 
  * Copyright (c) 2024 by ${qingzhuyue} email: ${qingzhuyue@foxmail.com}, All Rights Reserved.
  */
@@ -11,20 +11,52 @@ import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import {Modal} from "./model"
 
 const OPENROUTER_API_KEY = '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';
 const YOUR_SITE_URL = "";
 const YOUR_SITE_NAME = ""
+type BackendUser = {
+  id: number
+  name: string
+  disabled: boolean
+}
+const arr: BackendUser[] = [{ id: 1, name: "jack", disabled: false }, { id: 2, name: "admin", disabled: true }]
 
+
+type FrontendUser = {
+  id: number
+  name: string
+}
 function App() {
   const [text, setText]: any = useState(null)
   const { send, receive } = window.electronAPI;
+
+  const confirm = async (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      Modal.confirm({
+        onOk() { resolve(true) },
+        onCancel() { resolve(false) }
+      })
+    })
+  }
+
+  const toDo = async ()=>{
+    let result = await confirm();
+
+    if(result){
+      console.log("点击确认按钮")
+    } else{
+      console.log("点击取消按钮")
+    }
+  }
   useEffect(() => {
-    send("toUpdateMes","看看是不是有更新的")
+    toDo()
+    send("toUpdateMes", "看看是不是有更新的")
     receive("fromMain", (data: string) => {
       console.log("主线程传过来的参数", data)
     })
-    receive('updateMes',(data: string) => {
+    receive('updateMes', (data: string) => {
       console.log("更新信息", data)
       setText(data)
     })
@@ -54,6 +86,22 @@ function App() {
     //   console.log("异常：", err)
     // });
   }, []);
+
+  useEffect(() => {
+
+
+    function transform(users: BackendUser[]): FrontendUser[] {
+      const activeUser: FrontendUser[] = users.reduce((acc: FrontendUser[], { id, name, disabled }) => {
+        if (!disabled) {
+          acc.push({ id, name });
+          return acc;
+        }
+        return acc
+      }, [])
+
+      return activeUser
+    }
+  }, [])
 
   const openNewWindow = () => {
     send("toMain", "https://weread.qq.com/")
